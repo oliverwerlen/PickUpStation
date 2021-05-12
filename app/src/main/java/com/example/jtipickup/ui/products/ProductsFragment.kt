@@ -1,4 +1,4 @@
-package com.example.jtipickup.ui.dashboard
+package com.example.jtipickup.ui.products
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +10,20 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.jtipickup.R
 
-class DashboardFragment : Fragment() {
+class ProductsFragment : Fragment() {
 
-    private lateinit var dashboardViewModel: DashboardViewModel
+    private lateinit var productsViewModel: ProductsViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        dashboardViewModel =
-                ViewModelProvider(this).get(DashboardViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_dashboard, container, false)
+        productsViewModel =
+                ViewModelProvider(this).get(ProductsViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_products, container, false)
         val textView: TextView = root.findViewById(R.id.text_dashboard)
-        dashboardViewModel.text.observe(viewLifecycleOwner, Observer {
+        productsViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root
