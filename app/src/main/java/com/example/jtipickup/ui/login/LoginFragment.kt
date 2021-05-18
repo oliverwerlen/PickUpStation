@@ -9,10 +9,14 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.example.jtipickup.R
 import com.example.jtipickup.requests.LoginRequest
 import com.example.jtipickup.response.LoginResponse
 import com.example.jtipickup.retrofit.ApiClient
+import com.example.jtipickup.ui.products.ProductsFragment
+import com.example.jtipickup.ui.profile.ProfileFragment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,8 +34,7 @@ private const val ARG_PARAM2 = "param2"
  */
 class LoginFragment : Fragment(){
     // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
     private val TAG = "Login"
 
     private lateinit var sessionManager: SessionManager
@@ -43,11 +46,9 @@ class LoginFragment : Fragment(){
         super.onCreate(savedInstanceState)
         apiClient = ApiClient()
         sessionManager = SessionManager(requireActivity().applicationContext)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+        if(sessionManager.fetchAuthToken() != null){
+            findUserPageFragement()
         }
-
     }
 
     override fun onCreateView(
@@ -69,7 +70,10 @@ class LoginFragment : Fragment(){
         var editTextPassword = v.findViewById(R.id.password) as EditText
 
         apiClient.getApiService(requireContext()).login(
-            LoginRequest(username = editTextUsername.text.toString(), password = editTextPassword.text.toString())
+            LoginRequest(
+                username = editTextUsername.text.toString(),
+                password = editTextPassword.text.toString()
+            )
         )
             .enqueue(object : Callback<LoginResponse> {
                 override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
@@ -82,14 +86,37 @@ class LoginFragment : Fragment(){
                 ) {
                     val loginResponse = response.body()
                     Log.v(TAG, response.code().toString())
-                        if (response.code() == 200 && loginResponse != null ) {
-                            sessionManager.saveAuthToken(loginResponse.jwt)
-                        } else {
-                            Toast.makeText(context, "not working wrong", Toast.LENGTH_LONG).show()
-                        }
+                    if (response.code() == 200 && loginResponse != null) {
+                        sessionManager.saveAuthToken(loginResponse.jwt)
+                        Log.v(TAG, response.code().toString())
+                        goToUserPage(loginResponse)
+                    } else {
+                        Toast.makeText(context, "Wrong credentials", Toast.LENGTH_LONG).show()
+                    }
                     Log.v(TAG, sessionManager.fetchAuthToken().toString())
                 }
             })
+    }
+
+    fun goToUserPage(loginResponse: LoginResponse){
+        Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
+        val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.container, ProfileFragment.newInstance(loginResponse.username, loginResponse.username), "profile")
+        fragmentTransaction.addToBackStack("profile")
+        fragmentTransaction.commit()
+    }
+
+    fun findUserPageFragement(){
+        val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+        val fragment: Fragment? = fragmentManager.findFragmentByTag("profile")
+        if(fragment != null){
+            val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.container, fragment)
+            fragmentTransaction.commit()
+        }
+
+
     }
 
     companion object {

@@ -2,6 +2,7 @@ package com.example.jtipickup.ui.login
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.system.Os.remove
 import com.example.jtipickup.R
 
 class SessionManager (context: Context){
@@ -25,5 +26,13 @@ class SessionManager (context: Context){
      */
     fun fetchAuthToken(): String? {
         return prefs.getString(USER_TOKEN, null)
+    }
+
+    /**
+     * Function to fetch auth token
+     */
+
+    fun deleteAuthToken(){
+        prefs.edit().remove(USER_TOKEN)
     }
 }
