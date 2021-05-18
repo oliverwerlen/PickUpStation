@@ -13,4 +13,4 @@
 .externalNativeBuild
 .cxx
 local.properties
-*google_maps_api.xml
+app/src/release/res/values
