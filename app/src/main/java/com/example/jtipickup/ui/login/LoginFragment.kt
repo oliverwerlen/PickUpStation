@@ -68,7 +68,7 @@ class LoginFragment : Fragment(){
         var editTextUsername = v.findViewById(R.id.username) as EditText
         var editTextPassword = v.findViewById(R.id.password) as EditText
 
-        apiClient.getApiService().login(
+        apiClient.getApiService(requireContext()).login(
             LoginRequest(username = editTextUsername.text.toString(), password = editTextPassword.text.toString())
         )
             .enqueue(object : Callback<LoginResponse> {
