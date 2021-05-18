@@ -46,9 +46,7 @@ class LoginFragment : Fragment(){
         super.onCreate(savedInstanceState)
         apiClient = ApiClient()
         sessionManager = SessionManager(requireActivity().applicationContext)
-        if(sessionManager.fetchAuthToken() != null){
-            findUserPageFragement()
-        }
+        Log.v(TAG, sessionManager.fetchAuthToken().toString())
     }
 
     override fun onCreateView(
@@ -56,7 +54,9 @@ class LoginFragment : Fragment(){
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-
+        if(sessionManager.fetchAuthToken() != null){
+            findUserPageFragement()
+        }
         this.v = inflater.inflate(R.layout.fragment_login, container, false)
         var loginButton: Button = v.findViewById<Button>(R.id.login)
         loginButton.setOnClickListener {

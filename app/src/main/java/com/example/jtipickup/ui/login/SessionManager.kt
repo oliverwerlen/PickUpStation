@@ -33,6 +33,6 @@ class SessionManager (context: Context){
      */
 
     fun deleteAuthToken(){
-        prefs.edit().remove(USER_TOKEN)
+        prefs.edit().clear().apply()
     }
 }
