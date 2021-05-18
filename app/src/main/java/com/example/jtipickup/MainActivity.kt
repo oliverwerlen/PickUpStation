@@ -14,10 +14,10 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.jtipickup.ui.PickUp.PickUpFragment
 import com.example.jtipickup.ui.home.HomeFragment
 import com.example.jtipickup.ui.products.ProductsFragment
 import com.example.jtipickup.ui.login.LoginFragment
+import com.example.jtipickup.ui.map.MapsFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.navigation_pickup -> {
-                    loadFragment(PickUpFragment())
+                    loadFragment(MapsFragment())
                     return@setOnNavigationItemSelectedListener true
                 }
             }
