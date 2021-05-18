@@ -3,6 +3,7 @@ package com.example.jtipickup
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
 import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -16,7 +17,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.jtipickup.ui.PickUp.PickUpFragment
 import com.example.jtipickup.ui.home.HomeFragment
 import com.example.jtipickup.ui.products.ProductsFragment
-import com.example.jtipickup.ui.ui.login.LoginFragment
+import com.example.jtipickup.ui.login.LoginFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         // Alternative Methode für Bottomnav mit dynamischen Fragment Loads.
         // nav_view Binding via Kotlin Synthetic Binding
         nav_view.setOnNavigationItemSelectedListener{
