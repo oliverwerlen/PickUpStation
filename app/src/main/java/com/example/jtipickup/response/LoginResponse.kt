@@ -1,6 +1,5 @@
 package com.example.jtipickup.response
 
-import com.example.jtipickup.models.User
 import com.google.gson.annotations.SerializedName
 
 data class LoginResponse(
