@@ -8,7 +8,9 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jtipickup.R
+import kotlinx.android.synthetic.main.fragment_products.*
 
 class ProductsFragment : Fragment() {
 
@@ -21,11 +23,34 @@ class ProductsFragment : Fragment() {
     ): View? {
         productsViewModel =
                 ViewModelProvider(this).get(ProductsViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_products, container, false)
-        val textView: TextView = root.findViewById(R.id.text_dashboard)
-        productsViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
-        return root
+        return container?.inflate(R.layout.fragment_products)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        products_list.setHasFixedSize(true)
+        products_list.layoutManager = LinearLayoutManager(context)
+        initAdapter()
+
+        if(savedInstanceState == null) {
+            val products = mutableListOf<ProductItem>()
+            for(i in 1..10) {
+                products.add(ProductItem(
+                    i,
+                    "$i",
+                    "Titel$i",
+                    "Test Beschreibung $i",
+                    20.50,
+                    "https://picsum.photos/200/200?image=$i"
+                ))
+            }
+            (products_list.adapter as ProductsAdapter).addProducts(products)
+        }
+    }
+
+    private fun initAdapter() {
+        if (products_list.adapter == null) {
+            products_list.adapter = ProductsAdapter()
+        }
     }
 }
