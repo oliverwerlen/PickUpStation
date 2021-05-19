@@ -115,8 +115,6 @@ class LoginFragment : Fragment(){
             fragmentTransaction.replace(R.id.container, fragment)
             fragmentTransaction.commit()
         }
-
-
     }
 
     companion object {

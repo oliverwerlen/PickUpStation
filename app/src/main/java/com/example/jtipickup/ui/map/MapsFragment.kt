@@ -9,31 +9,43 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.example.jtipickup.R
+import com.example.jtipickup.response.LoginResponse
 import com.example.jtipickup.response.PickUpResponse
 import com.example.jtipickup.retrofit.ApiClient
+import com.example.jtipickup.ui.login.SessionManager
+import com.example.jtipickup.ui.products.ProductsFragment
+import com.example.jtipickup.ui.profile.ProfileFragment
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MapsFragment : Fragment() {
+class MapsFragment : Fragment(), GoogleMap.OnMarkerClickListener, View.OnClickListener {
 
     val pickUpViewModel: PickUpViewModel by viewModels()
     private val TAG = "PickUp"
     var pickUps: List<PickUpResponse> = emptyList()
-    private lateinit var apiClient: ApiClient
+
+    private lateinit var sessionManager: SessionManager
     private lateinit var googleMap: GoogleMap
+
     private val callback = OnMapReadyCallback { googleMap ->
         /**
          * Manipulates the map once available.
@@ -50,6 +62,7 @@ class MapsFragment : Fragment() {
             for(item in pickUps)createMarker(item)
         })
         pickUpViewModel.getAllPickUps(requireContext())
+        googleMap.setOnMarkerClickListener(this)
 
     }
 
@@ -58,6 +71,7 @@ class MapsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        sessionManager = SessionManager(requireContext())
         return inflater.inflate(R.layout.fragment_maps, container, false)
     }
 
@@ -68,15 +82,43 @@ class MapsFragment : Fragment() {
     }
 
     fun createMarker(pickUpResponse: PickUpResponse){
-        val sydney = LatLng(pickUpResponse.latitude.toDouble(), pickUpResponse.longitude.toDouble())
-        googleMap.addMarker(MarkerOptions().position(sydney).title(pickUpResponse.name))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
-
+        val longlat = LatLng(pickUpResponse.latitude.toDouble(), pickUpResponse.longitude.toDouble())
+        val marker: Marker = googleMap.addMarker(MarkerOptions().position(longlat).title(pickUpResponse.name).snippet(pickUpResponse.description))
+        marker.tag = pickUpResponse
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(longlat))
     }
-    fun addMarker(map: GoogleMap){
 
+    override fun onMarkerClick(marker: Marker): Boolean {
+        val pickUp = marker.tag as? PickUpResponse
+        if(pickUp != null) {
+            this.sessionManager.savePickUpSelected(pickUp)
+        }
+        val snackbar = Snackbar.make(
+            requireActivity().findViewById(R.id.map) as View,
+            "Hello",
+            Snackbar.LENGTH_SHORT
+        )
+        snackbar.setAction("To the products", this)
+        snackbar.show()
+        // Return false to indicate that we have not consumed the event and that we wish
+        // for the default behavior to occur (which is for the camera to move such that the
+        // marker is centered and for the marker's info window to open, if it has one).
+        return false
     }
-    fun getMarkerText(){
 
+    override fun onClick(v: View?) {
+        goToProducts()
     }
+
+    private fun goToProducts() {
+            val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
+            var fragment: Fragment? = fragmentManager.findFragmentByTag("products")
+            val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+            if(fragment == null) {
+                fragment = ProductsFragment()
+            }
+            fragmentTransaction.replace(R.id.container, fragment)
+            fragmentTransaction.commit()
+    }
+
 }

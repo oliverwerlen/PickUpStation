@@ -1,5 +1,6 @@
 package com.example.jtipickup
 
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -18,6 +19,8 @@ import com.example.jtipickup.ui.home.HomeFragment
 import com.example.jtipickup.ui.products.ProductsFragment
 import com.example.jtipickup.ui.login.LoginFragment
 import com.example.jtipickup.ui.map.MapsFragment
+import com.example.jtipickup.ui.profile.ProfileFragment
+import com.google.android.gms.maps.MapFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -31,28 +34,21 @@ class MainActivity : AppCompatActivity() {
         nav_view.setOnNavigationItemSelectedListener{
             when(it.itemId) {
                 R.id.navigation_home -> {
-                    loadFragment(HomeFragment())
+                    loadFragment("home")
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.navigation_products -> {
-                    loadFragment(ProductsFragment())
+                    loadFragment("products")
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.navigation_pickup -> {
-                    loadFragment(MapsFragment())
+                    loadFragment("map")
                     return@setOnNavigationItemSelectedListener true
                 }
             }
             false
         }
-        /*val navView: BottomNavigationView = findViewById(R.id.nav_view)
-        val navController = findNavController(R.id.nav_host_fragment)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.navigation_home, R.id.navigation_pickup, R.id.navigation_products))
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)*/
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -68,11 +64,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     //Funktion zum Laden von Fragments
-    private fun loadFragment(fragment: Fragment) {
+    private fun loadFragment(fragmentTag: String) {
         // load fragment
+        var activity: MainActivity = this
+        val fragmentManager: FragmentManager = activity.supportFragmentManager
+        var fragment: Fragment? = fragmentManager.findFragmentByTag("fragmentTag")
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.container, fragment)
-        transaction.addToBackStack(null)
+        if (fragment == null) {
+            when(fragmentTag){
+                "home" -> fragment = HomeFragment()
+                "products" -> fragment = ProductsFragment()
+                "map" -> fragment = MapsFragment()
+                "profile" -> fragment = ProfileFragment()
+            }
+        }
+        transaction.replace(R.id.container, fragment!!, fragmentTag)
+        transaction.addToBackStack(fragmentTag)
         transaction.commit()
     }
 }
