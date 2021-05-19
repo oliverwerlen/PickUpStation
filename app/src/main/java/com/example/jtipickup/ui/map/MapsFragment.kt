@@ -21,6 +21,7 @@ import com.example.jtipickup.response.LoginResponse
 import com.example.jtipickup.response.PickUpResponse
 import com.example.jtipickup.retrofit.ApiClient
 import com.example.jtipickup.ui.login.SessionManager
+import com.example.jtipickup.ui.products.ProductsFragment
 import com.example.jtipickup.ui.profile.ProfileFragment
 
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -111,12 +112,13 @@ class MapsFragment : Fragment(), GoogleMap.OnMarkerClickListener, View.OnClickLi
 
     private fun goToProducts() {
             val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
-            val fragment: Fragment? = fragmentManager.findFragmentByTag("products")
-            if(fragment != null){
-                val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-                fragmentTransaction.replace(R.id.container, fragment)
-                fragmentTransaction.commit()
-        }
+            var fragment: Fragment? = fragmentManager.findFragmentByTag("products")
+            val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+            if(fragment == null) {
+                fragment = ProductsFragment()
+            }
+            fragmentTransaction.replace(R.id.container, fragment)
+            fragmentTransaction.commit()
     }
 
 }
