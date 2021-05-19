@@ -1,6 +1,7 @@
 package com.example.jtipickup.retrofit
 
 import com.example.jtipickup.requests.LoginRequest
+import com.example.jtipickup.response.InventoryResponse
 import com.example.jtipickup.response.LoginResponse
 import com.example.jtipickup.response.PickUpResponse
 import retrofit2.Call
@@ -16,9 +17,9 @@ interface ApiService {
 
     @GET(Constants.PICKUP_URL)
     @Headers("Content-Type: application/json;charset=UTF-8")
-    fun getPickUps(): Call<PickUpResponse>
+    fun getPickUps(): Call<List<PickUpResponse>>
 
     @GET(Constants.INVENTORY_BY_PICKUP_URL)
     @Headers("Content-Type: application/json;charset=UTF-8")
-    fun getInventoriesByPickUp(): Call<PickUpResponse>
+    fun getInventoriesByPickUp(): Call<InventoryResponse>
 }
