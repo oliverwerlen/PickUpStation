@@ -16,5 +16,9 @@ data class PickUpResponse(
     @SerializedName("description")
     val description: String,
     @SerializedName("dateAdded")
-    val dateAdded: Date
+    val dateAdded: Date,
+    @SerializedName("links")
+    val links: List<Link>
+
 )
+
