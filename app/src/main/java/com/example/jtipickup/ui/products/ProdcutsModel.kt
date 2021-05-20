@@ -5,7 +5,7 @@ import com.example.jtipickup.commons.ViewType
 
 data class ProductItem(
     val id: Int,
-    val productCode: String,
+    val productCode: String?,
     val name: String,
     val description: String,
     val price: Double,
