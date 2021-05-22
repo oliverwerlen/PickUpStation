@@ -1,6 +1,8 @@
 package com.example.jtipickup.ui.products
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +15,7 @@ import com.example.jtipickup.R
 import com.example.jtipickup.response.PickUpResponse
 import com.example.jtipickup.response.ProductsResponse
 import kotlinx.android.synthetic.main.fragment_products.*
+import kotlinx.android.synthetic.main.products_item.*
 
 class ProductsFragment : Fragment() {
 
@@ -30,17 +33,17 @@ class ProductsFragment : Fragment() {
         return container?.inflate(R.layout.fragment_products)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        products_list.setHasFixedSize(true)
-        products_list.layoutManager = LinearLayoutManager(context)
 
         if(savedInstanceState == null) {
             productsViewModel.prodcuts.observe(viewLifecycleOwner, Observer {
                 this.products = it
-                initAdapter()
                 for(item in products)fillList(item)
-                (products_list.adapter as ProductsAdapter).addProducts(productList)
+                products_list.apply {
+                    layoutManager = LinearLayoutManager(activity)
+                    adapter = ProductsAdapter(productList)
+                }
             })
             productsViewModel.getAllProducts(requireContext())
         }
@@ -54,13 +57,10 @@ class ProductsFragment : Fragment() {
                 productsResponse.name,
                 productsResponse.description,
                 productsResponse.price,
-                "https://bdaf21-owerlen.enterpriselab.ch/assets/min/"+productsResponse.image+"-min.png"
+                "https://bdaf21-owerlen.enterpriselab.ch/assets/min/"+productsResponse.image+"-min.png",
+                0
         ))
     }
 
-    private fun initAdapter() {
-        if (products_list.adapter == null) {
-            products_list.adapter = ProductsAdapter()
-        }
-    }
+
 }

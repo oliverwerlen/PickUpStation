@@ -1,61 +1,71 @@
 package com.example.jtipickup.ui.products
 
+import android.content.Context
+import android.content.SharedPreferences
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.collection.SparseArrayCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.jtipickup.commons.AdapterConstants
-import com.example.jtipickup.commons.ViewType
-import com.example.jtipickup.commons.ViewTypeDelegateAdapter
+import com.example.jtipickup.R
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import kotlinx.android.synthetic.main.products_item.view.*
+import java.lang.reflect.Type
 
-class ProductsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var items: ArrayList<ViewType>
-    private var delegateAdapters = SparseArrayCompat<ViewTypeDelegateAdapter>()
-    private val loadingItem = object : ViewType {
-        override fun getViewType() = AdapterConstants.LOADING
-    }
+class ProductsAdapter(private val prodcutItems: List<ProductItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    init {
-        delegateAdapters.put(AdapterConstants.PRODUCTS, ProductsDelegateAdapter())
-        items = ArrayList()
-        items.add(loadingItem)
-    }
 
     override fun getItemCount(): Int {
-        return items.size
+        return prodcutItems.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return delegateAdapters.get(viewType)!!.onCreateViewHolder(parent)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.products_item, parent, false)
+        return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        delegateAdapters.get(getItemViewType(position))!!.onBindViewHolder(holder, this.items[position])
+        val productItem = prodcutItems[position]
+        holder as ViewHolder
+        holder.bind(productItem)
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return this.items.get(position).getViewType()
-    }
+    class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
 
-    fun addProducts(products: List<ProductItem>) {
-        val initialPos = items.size - 1
-        items.removeAt(initialPos)
-        notifyItemRemoved(initialPos)
-        items.addAll(products)
-        notifyItemRangeChanged(initialPos, items.size + 1)
-    }
+        fun bind(item: ProductItem) = with(itemView) {
+            productImg.loadImg(item.image)
+            title.text = item.name
+            description.text = item.description
+            price.text = "Preis: " + item.price + "0 CHF"
+            addToCartButton.setOnClickListener{
+                Log.d("ADAPTER", "Button Test")
+                addToCart(item, item.id.toString())
+            }
+        }
 
-    fun clearAndAddProducts(news: List<ProductItem>) {
-        items.clear()
-        notifyItemRangeRemoved(0, getLastPosition())
-        items.addAll(news)
-        notifyItemRangeInserted(0, items.size)
-    }
+        private fun addToCart(item: ProductItem, key: String?) {
+            val prefs: SharedPreferences = view.context.getSharedPreferences("cart", Context.MODE_PRIVATE)
+            val gson = Gson()
+            val editor: SharedPreferences.Editor = prefs.edit()
 
-    fun getPrducts(): List<ProductItem> {
-        return items
-            .filter { it.getViewType() == AdapterConstants.PRODUCTS }
-            .map { it as ProductItem }
+            val getJson: String? = prefs.getString(key, null)
+            if(getJson == null) {
+                Log.d("ADAPTER", "No Duplicate found")
+                item.amount = 1
+                val json: String = gson.toJson(item)
+                editor.putString(key, json)
+                editor.apply()
+            }
+            else {
+                val type = object : TypeToken<ProductItem>() {}.type
+                val newItem: ProductItem = gson.fromJson<ProductItem>(getJson, type)
+                newItem.amount += 1
+                val json: String = gson.toJson(newItem)
+                editor.putString(key, json)
+                editor.apply()
+                Log.d("ADAPTER", "Duplicate found")
+            }
+        }
     }
-
-    private fun getLastPosition() = if (items.lastIndex == -1) 0 else items.lastIndex
 }

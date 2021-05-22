@@ -15,6 +15,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.jtipickup.ui.cart.CartFragment
 import com.example.jtipickup.ui.home.HomeFragment
 import com.example.jtipickup.ui.products.ProductsFragment
 import com.example.jtipickup.ui.login.LoginFragment
@@ -43,6 +44,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.navigation_pickup -> {
                     loadFragment("map")
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.navigation_cart -> {
+                    loadFragment("cart")
                     return@setOnNavigationItemSelectedListener true
                 }
             }
@@ -76,6 +81,7 @@ class MainActivity : AppCompatActivity() {
                 "products" -> fragment = ProductsFragment()
                 "map" -> fragment = MapsFragment()
                 "profile" -> fragment = ProfileFragment()
+                "cart" -> fragment = CartFragment()
             }
         }
         transaction.replace(R.id.container, fragment!!, fragmentTag)

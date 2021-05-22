@@ -16,4 +16,9 @@
         android:icon="@drawable/ic_outline_shopping_cart_24"
         android:title="@string/title_products" />
 
+    <item
+        android:id="@+id/navigation_cart"
+        android:icon="@drawable/ic_outline_shopping_cart_24"
+        android:title="@string/title_cart" />
+
 </menu>
