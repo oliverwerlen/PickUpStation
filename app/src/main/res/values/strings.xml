@@ -5,6 +5,7 @@
     <string name="title_pickup">Order</string>
     <string name="title_profile">Profile</string>
     <string name="title_cart">Shopping Cart</string>
+    <string name="total_cart">Total:</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>

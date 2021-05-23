@@ -1,4 +1,8 @@
 package com.example.jtipickup.ui.cart
 
-class CartViewModel {
+import androidx.lifecycle.ViewModel
+
+class CartViewModel: ViewModel() {
+
+    private val TAG = "SHOPPINGCART"
 }

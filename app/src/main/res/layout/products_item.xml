@@ -54,7 +54,6 @@
         android:layout_height="30dp"
         android:layout_below="@+id/description"
         android:layout_marginTop="22dp"
-        android:layout_toRightOf="@+id/productImg"
         android:text="Buy"
         android:textSize="8sp" />
 </RelativeLayout>

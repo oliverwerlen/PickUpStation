@@ -7,11 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.jtipickup.MainActivity
 import com.example.jtipickup.R
+import com.example.jtipickup.ui.cart.CartCompanion
+import com.example.jtipickup.ui.cart.CartItem
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.products_item.view.*
-import java.lang.reflect.Type
 
 class ProductsAdapter(private val prodcutItems: List<ProductItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -39,32 +42,17 @@ class ProductsAdapter(private val prodcutItems: List<ProductItem>) : RecyclerVie
             description.text = item.description
             price.text = "Preis: " + item.price + "0 CHF"
             addToCartButton.setOnClickListener{
-                Log.d("ADAPTER", "Button Test")
-                addToCart(item, item.id.toString())
-            }
-        }
+                CartCompanion.addToCart(
+                    CartItem(
+                    item,
+                    1
+                ), item.id.toString(), view.context)
 
-        private fun addToCart(item: ProductItem, key: String?) {
-            val prefs: SharedPreferences = view.context.getSharedPreferences("cart", Context.MODE_PRIVATE)
-            val gson = Gson()
-            val editor: SharedPreferences.Editor = prefs.edit()
-
-            val getJson: String? = prefs.getString(key, null)
-            if(getJson == null) {
-                Log.d("ADAPTER", "No Duplicate found")
-                item.amount = 1
-                val json: String = gson.toJson(item)
-                editor.putString(key, json)
-                editor.apply()
-            }
-            else {
-                val type = object : TypeToken<ProductItem>() {}.type
-                val newItem: ProductItem = gson.fromJson<ProductItem>(getJson, type)
-                newItem.amount += 1
-                val json: String = gson.toJson(newItem)
-                editor.putString(key, json)
-                editor.apply()
-                Log.d("ADAPTER", "Duplicate found")
+                Snackbar.make(
+                    (itemView.context as MainActivity).findViewById(R.id.products_list),
+                    "${item.name} wurde zum Warenkorb hinzugefügt",
+                    Snackbar.LENGTH_LONG
+                ).show()
             }
         }
     }
