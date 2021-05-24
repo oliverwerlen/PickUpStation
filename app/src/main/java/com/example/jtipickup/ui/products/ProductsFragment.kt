@@ -52,7 +52,7 @@ class ProductsFragment : Fragment() {
             productsResponse.name,
             productsResponse.description,
             productsResponse.price,
-            "https://bdaf21-owerlen.enterpriselab.ch/assets/min/"+productsResponse.image+"-min.png"
+            "https://bdaf21-owerlen.enterpriselab.ch/assets/min/"+productsResponse.image+"-min.jpg"
         ))
     }
 
