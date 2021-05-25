@@ -17,6 +17,7 @@ import com.example.jtipickup.response.LoginResponse
 import com.example.jtipickup.retrofit.ApiClient
 import com.example.jtipickup.ui.products.ProductsFragment
 import com.example.jtipickup.ui.profile.ProfileFragment
+import com.google.android.material.snackbar.Snackbar
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -91,7 +92,12 @@ class LoginFragment : Fragment(){
                         Log.v(TAG, response.code().toString())
                         goToUserPage(loginResponse)
                     } else {
-                        Toast.makeText(context, "Wrong credentials", Toast.LENGTH_LONG).show()
+                        val snackbar = Snackbar.make(
+                            requireActivity().findViewById(R.id.map) as View,
+                            "Wrong Credentials",
+                            Snackbar.LENGTH_SHORT
+                        )
+                        snackbar.show()
                     }
                     Log.v(TAG, sessionManager.fetchAuthToken().toString())
                 }
