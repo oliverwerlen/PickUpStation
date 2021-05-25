@@ -22,7 +22,7 @@ class PickUpViewModel: ViewModel(){
     var pickUps: MutableLiveData<List<PickUpResponse>> =  MutableLiveData()
 
     fun getAllPickUps(context: Context){
-        val call = apiClient.getApiService(context).getPickUps()
+        apiClient.getApiService(context).getPickUps()
             .enqueue(object : Callback<List<PickUpResponse>> {
                 override fun onFailure(call: Call<List<PickUpResponse>>, t: Throwable) {
                     Log.v(TAG, t.toString())
@@ -35,7 +35,6 @@ class PickUpViewModel: ViewModel(){
                     Log.v(TAG, response.code().toString())
                     if (response.code() == 200 && pickUpsResponse != null) {
                         pickUps.value = pickUpsResponse
-                        Log.v(TAG, pickUpsResponse.toString())
                     } else {
                         Toast.makeText(context, "wrong", Toast.LENGTH_LONG).show()
                     }

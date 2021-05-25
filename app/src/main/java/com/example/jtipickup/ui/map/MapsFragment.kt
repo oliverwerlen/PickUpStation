@@ -43,8 +43,10 @@ class MapsFragment : Fragment(), GoogleMap.OnMarkerClickListener, View.OnClickLi
     private val TAG = "PickUp"
     var pickUps: List<PickUpResponse> = emptyList()
 
+
     private lateinit var sessionManager: SessionManager
     private lateinit var googleMap: GoogleMap
+
 
     private val callback = OnMapReadyCallback { googleMap ->
         /**
@@ -59,6 +61,7 @@ class MapsFragment : Fragment(), GoogleMap.OnMarkerClickListener, View.OnClickLi
         pickUpViewModel.pickUps.observe(this, Observer {
             this.pickUps = it
             this.googleMap = googleMap
+            this.googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
             for(item in pickUps)createMarker(item)
         })
         pickUpViewModel.getAllPickUps(requireContext())
@@ -83,23 +86,25 @@ class MapsFragment : Fragment(), GoogleMap.OnMarkerClickListener, View.OnClickLi
 
     fun createMarker(pickUpResponse: PickUpResponse){
         val longlat = LatLng(pickUpResponse.latitude.toDouble(), pickUpResponse.longitude.toDouble())
-        val marker: Marker = googleMap.addMarker(MarkerOptions().position(longlat).title(pickUpResponse.name).snippet(pickUpResponse.description))
+        val marker: Marker = googleMap.addMarker(MarkerOptions().position(longlat).title(pickUpResponse.name)
+            .snippet(pickUpResponse.description))
         marker.tag = pickUpResponse
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(longlat))
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(longlat, 8f))
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
         val pickUp = marker.tag as? PickUpResponse
         if(pickUp != null) {
             this.sessionManager.savePickUpSelected(pickUp)
+            val snackbar = Snackbar.make(
+                requireActivity().findViewById(R.id.map) as View,
+                pickUp.name,
+                Snackbar.LENGTH_SHORT
+            )
+            snackbar.setAction("To the products", this)
+            snackbar.show()
         }
-        val snackbar = Snackbar.make(
-            requireActivity().findViewById(R.id.map) as View,
-            "Hello",
-            Snackbar.LENGTH_SHORT
-        )
-        snackbar.setAction("To the products", this)
-        snackbar.show()
+
         // Return false to indicate that we have not consumed the event and that we wish
         // for the default behavior to occur (which is for the camera to move such that the
         // marker is centered and for the marker's info window to open, if it has one).
