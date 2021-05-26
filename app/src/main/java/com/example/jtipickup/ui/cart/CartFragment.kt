@@ -44,6 +44,11 @@ class CartFragment: Fragment() {
                 updateTotal()
             }
         }
+        cart_list.addItemDecoration(
+            DividerItemDecoration(
+                context, LinearLayoutManager.VERTICAL
+            )
+        )
         updateTotal()
     }
 

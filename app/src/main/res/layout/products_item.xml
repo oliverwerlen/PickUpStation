@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:padding="5dip">
 
@@ -39,7 +40,7 @@
 
     <TextView
         android:id="@+id/price"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/description"
         android:layout_alignStart="@+id/description"
@@ -48,12 +49,12 @@
         android:textSize="15sp"
         android:text="Preis: 20.-" />
 
-    <Button
+    <ImageButton
         android:id="@+id/addToCartButton"
-        android:layout_width="60dp"
-        android:layout_height="30dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_below="@+id/description"
-        android:layout_marginTop="22dp"
-        android:text="Buy"
-        android:textSize="8sp" />
+        android:layout_alignParentEnd="true"
+        android:textSize="8sp"
+        app:srcCompat="@drawable/ic_outline_shopping_cart_24" />
 </RelativeLayout>

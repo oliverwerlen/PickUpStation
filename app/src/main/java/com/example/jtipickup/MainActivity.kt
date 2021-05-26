@@ -30,6 +30,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Start Home Fragment
+        loadFragment("home")
+
         // Alternative Methode für Bottomnav mit dynamischen Fragment Loads.
         // nav_view Binding via Kotlin Synthetic Binding
         nav_view.setOnNavigationItemSelectedListener{
