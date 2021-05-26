@@ -6,4 +6,6 @@ object Constants {
     const val PICKUP_URL = "pickUps"
     const val PRODUCT_URL = "products"
     const val INVENTORY_BY_PICKUP_URL = "inventories/pickUpStation/"
+    const val ORDER_URL = "orders"
+    const val ORDER_ITEM_URL =  "orderItems"
 }

@@ -6,7 +6,7 @@ import java.util.*
 data class ProductsResponse(
     @SerializedName("product_id")
     val id: Int,
-    @SerializedName("prodcut_code")
+    @SerializedName("productCode")
     val productCode: String,
     @SerializedName("name")
     val name: String,

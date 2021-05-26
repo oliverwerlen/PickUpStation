@@ -70,7 +70,7 @@ class CartAdapter(private var cartItems: List<CartItem>, val itemClick: () -> Un
             }).subscribe {cart ->
                 cartAmount.text = cart.amount.toString()
                 cartItemPrice.text = BigDecimal(cart.product.price * cart.amount)
-                    .setScale(2, RoundingMode.DOWN)
+                    .setScale(2, RoundingMode.HALF_EVEN)
                     .toString() + " CHF"
             }
         }
