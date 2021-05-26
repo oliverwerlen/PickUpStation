@@ -77,5 +77,12 @@ class CartCompanion {
             editor.apply()
         }
 
+        fun deleteAllCartItems(context: Context){
+            val prefs: SharedPreferences = context.getSharedPreferences("shoppingCart", Context.MODE_PRIVATE)
+            val editor: SharedPreferences.Editor = prefs.edit()
+            editor.clear()
+            editor.apply()
+        }
+
     }
 }

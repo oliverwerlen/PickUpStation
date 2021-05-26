@@ -45,10 +45,16 @@ class CartFragment: Fragment() {
             ViewModelProvider(this).get(CartViewModel::class.java)
         sessionManager = SessionManager(requireContext())
         this.v = inflater.inflate(R.layout.fragment_cart, container, false)
+
         var checkoutButton: Button = v.findViewById<Button>(R.id.checkoutButton)
+        if(sessionManager.fetchAuthToken() != null){
+           checkoutButton.isEnabled = true
+        }
         checkoutButton.setOnClickListener() {
             cartViewModel.createOrder(requireContext())
         }
+        cartViewModel.view =  this.v
+        cartViewModel.activity = requireActivity()
 
         return this.v
     }
@@ -78,7 +84,4 @@ class CartFragment: Fragment() {
             }
         cartTotalNumber.text = "${BigDecimal(totalPrice).setScale(2, RoundingMode.DOWN)} CHF"
     }
-
-
-
 }

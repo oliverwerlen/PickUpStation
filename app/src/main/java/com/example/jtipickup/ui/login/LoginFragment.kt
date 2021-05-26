@@ -48,6 +48,9 @@ class LoginFragment : Fragment(){
         apiClient = ApiClient()
         sessionManager = SessionManager(requireActivity().applicationContext)
         Log.v(TAG, sessionManager.fetchAuthToken().toString())
+        if(sessionManager.fetchAuthToken() != null){
+            findUserPageFragement()
+        }
     }
 
     override fun onCreateView(
@@ -55,9 +58,6 @@ class LoginFragment : Fragment(){
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        if(sessionManager.fetchAuthToken() != null){
-            findUserPageFragement()
-        }
         this.v = inflater.inflate(R.layout.fragment_login, container, false)
         var loginButton: Button = v.findViewById<Button>(R.id.login)
         loginButton.setOnClickListener {
@@ -93,7 +93,7 @@ class LoginFragment : Fragment(){
                         goToUserPage(loginResponse)
                     } else {
                         val snackbar = Snackbar.make(
-                            requireActivity().findViewById(R.id.map) as View,
+                            requireActivity().findViewById(R.id.login) as View,
                             "Wrong Credentials",
                             Snackbar.LENGTH_SHORT
                         )
@@ -119,6 +119,11 @@ class LoginFragment : Fragment(){
         if(fragment != null){
             val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
             fragmentTransaction.replace(R.id.container, fragment)
+            fragmentTransaction.commit()
+        }else{
+            val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
+            val profileFragment: Fragment = ProfileFragment()
+            fragmentTransaction.replace(R.id.container, profileFragment)
             fragmentTransaction.commit()
         }
     }

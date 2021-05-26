@@ -3,18 +3,16 @@ package com.example.jtipickup.ui.cart
 import android.content.Context
 import android.util.Log
 import android.view.View
-import android.widget.EditText
-import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModel
+import com.example.jtipickup.MainActivity
 import com.example.jtipickup.R
-import com.example.jtipickup.requests.LoginRequest
 import com.example.jtipickup.requests.OrderItemRequest
 import com.example.jtipickup.requests.OrderRequest
-import com.example.jtipickup.response.LoginResponse
 import com.example.jtipickup.response.OrderItemResponse
 import com.example.jtipickup.response.OrderResponse
-import com.example.jtipickup.response.ProductsResponse
 import com.example.jtipickup.retrofit.ApiClient
 import com.example.jtipickup.ui.login.SessionManager
 import com.google.android.material.snackbar.Snackbar
@@ -27,6 +25,8 @@ class CartViewModel: ViewModel() {
     private lateinit var apiClient: ApiClient
     private lateinit var sessionManager: SessionManager
     private lateinit var context: Context
+    lateinit var view: View
+    lateinit var activity: FragmentActivity
 
     private val TAG = "SHOPPINGCART"
 
@@ -53,7 +53,7 @@ class CartViewModel: ViewModel() {
                     if (response.code() == 200 && orderResponse != null) {
                         Log.v(TAG, "Judihui order Created")
                         var cartItems: List<CartItem> = CartCompanion.getAllCartItems(context)
-                        cartItems.forEach{saveItem(orderResponse.order_id, it)}
+                        cartItems.forEach { saveItem(orderResponse.order_id, it) }
                     } else {
                         Log.v(TAG, response.code().toString())
                     }
@@ -81,12 +81,33 @@ class CartViewModel: ViewModel() {
                     val orderItemResponse = response.body()
                     Log.v(TAG, response.code().toString())
                     if (response.code() == 200 && orderItemResponse != null) {
-                        Log.v(TAG, "Judihui")
-                    } else {
-                        Log.v(TAG, response.code().toString())
-                    }
+                        val snackbar = Snackbar.make(
+                            view.findViewById(R.id.cart) as View,
+                            "Order received",
+                            Snackbar.LENGTH_SHORT
+                        )
+                        snackbar.show()
+                        CartCompanion.deleteAllCartItems(context)
+                        reloadFragment()
 
+                    } else {
+                        val snackbar = Snackbar.make(
+                            view.findViewById(R.id.cart) as View,
+                            "Error while processing",
+                            Snackbar.LENGTH_SHORT
+                        )
+                        snackbar.show()
+                    }
                 }
             })
+    }
+
+    fun reloadFragment(){
+
+        var fragment: Fragment? = activity.supportFragmentManager.findFragmentByTag("cart")
+        val ft: FragmentTransaction = activity.supportFragmentManager.beginTransaction()
+        ft.detach(fragment!!)
+        ft.attach(fragment)
+        ft.commit()
     }
 }
