@@ -82,6 +82,6 @@ class CartFragment: Fragment() {
             .fold(0.toDouble()){ acc, cartItem ->
                 acc + cartItem.amount.times(cartItem.product.price)
             }
-        cartTotalNumber.text = "${BigDecimal(totalPrice).setScale(2, RoundingMode.DOWN)} CHF"
+        cartTotalNumber.text = "${BigDecimal(totalPrice).setScale(2, RoundingMode.HALF_EVEN)} CHF"
     }
 }

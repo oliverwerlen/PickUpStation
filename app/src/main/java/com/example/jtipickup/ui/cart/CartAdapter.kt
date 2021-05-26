@@ -48,7 +48,7 @@ class CartAdapter(private var cartItems: List<CartItem>, val itemClick: () -> Un
             cartTitle.text = item.product.name
             cartAmount.text = item.amount.toString()
             cartItemPrice.text = BigDecimal(item.product.price * item.amount)
-                .setScale(2, RoundingMode.DOWN)
+                .setScale(2, RoundingMode.HALF_EVEN)
                 .toString() + " CHF"
 
             Observable.create(ObservableOnSubscribe<CartItem> {

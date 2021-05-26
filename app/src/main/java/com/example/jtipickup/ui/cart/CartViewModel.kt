@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModel
-import com.example.jtipickup.MainActivity
 import com.example.jtipickup.R
 import com.example.jtipickup.requests.OrderItemRequest
 import com.example.jtipickup.requests.OrderRequest

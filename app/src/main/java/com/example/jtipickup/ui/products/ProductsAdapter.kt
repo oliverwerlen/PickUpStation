@@ -1,8 +1,5 @@
 package com.example.jtipickup.ui.products
 
-import android.content.Context
-import android.content.SharedPreferences
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,13 +9,11 @@ import com.example.jtipickup.R
 import com.example.jtipickup.ui.cart.CartCompanion
 import com.example.jtipickup.ui.cart.CartItem
 import com.google.android.material.snackbar.Snackbar
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.products_item.view.*
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 class ProductsAdapter(private val prodcutItems: List<ProductItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-
     override fun getItemCount(): Int {
         return prodcutItems.size
     }
@@ -35,12 +30,13 @@ class ProductsAdapter(private val prodcutItems: List<ProductItem>) : RecyclerVie
     }
 
     class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-
         fun bind(item: ProductItem) = with(itemView) {
             productImg.loadImg(item.image)
             title.text = item.name
             description.text = item.description
-            price.text = "Preis: " + item.price + "0 CHF"
+            price.text = "Preis: " + BigDecimal(item.price)
+                .setScale(2, RoundingMode.HALF_EVEN)
+                .toString() + " CHF"
             addToCartButton.setOnClickListener{
                 CartCompanion.addToCart(
                     CartItem(

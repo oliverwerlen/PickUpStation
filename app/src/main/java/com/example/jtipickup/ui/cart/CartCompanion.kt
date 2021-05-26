@@ -45,7 +45,6 @@ class CartCompanion {
                 editor.apply()
             }
             else {
-                //val type = object : TypeToken<CartItem>() {}.type
                 val newItem: CartItem = gson.fromJson<CartItem>(getJson, itemType)
                 newItem.amount += 1
                 val json: String = gson.toJson(newItem)
